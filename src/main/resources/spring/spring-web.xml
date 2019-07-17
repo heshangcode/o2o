@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	<!--配置SpringMvc-->
+	<!--1.启动SpringMvc注解-->
+	<mvc:annotation-driven/>
+	<!--2.扫描web相关的bean，扫描-->
+	<context:component-scan base-package="com.hs.o2o.web"/>
+
+	<!--2.静态资源排除方案，交给默认的servlet处理，不经过DispatcherServlet处理
+		1.加入对静态资源的处理：js，gif，png...
+		2。允许使用“/”做整体映射
+	-->
+	<!--3.访问这个/resources/路径下的，不经过-->
+	<mvc:resources mapping="/resources/**" location="/resources/"/>
+	<mvc:default-servlet-handler/>
+
+	<!--4.定义视图解析器-->
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/html/"/>
+		<property name="suffix" value=".html"/>
+	</bean>
+
+	<!--5.使用上传的解析器，如果发现是上传操作，会自动使用该解析器帮我们完成相应的操作-->
+	<!--该ID为固定值-->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!--设置上传文件编码-->
+		<!--简写方式 标签p c注入
+		p:defaultEncoding = "UTF-8"-->
+		<property name="defaultEncoding" value="UTF-8"/>
+		<!--设置文件上传最大值1024*1024*20=20M-->
+		<property name="maxUploadSize" value="20971520"/>
+		<!--缓存，读取文件到内存中最大的字节数，可以不设置-->
+		<property name="maxInMemorySize" value="2048"/>
+		<!--延时提高上传效率，一个类似懒加载的属性-->
+		<property name="resolveLazily" value="true"/>
+	</bean>
+	<!--6.登录拦截器-->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/shopadmin/**"/>
+			<mvc:exclude-mapping path="/person/login"/>
+			<bean class="com.hs.o2o.interceptor.LoginInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+</beans>
