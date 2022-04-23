@@ -19,7 +19,7 @@
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>
 		<!--定义全局版本号,在<properties>标签里-->
-		<spring.version>4.3.7.RELEASE</spring.version>
+		<spring.version>5.3.19</spring.version>
 	</properties>
 
 	<dependencies>
